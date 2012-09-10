@@ -1,0 +1,258 @@
+% Manual compile
+% Sweave("fmcsR.Rnw"); system("pdflatex fmcsR.tex; bibtex fmcsR; pdflatex fmcsR.tex; pdflatex fmcsR.tex")
+% echo 'Sweave("fmcsR.Rnw")' | R --slave; echo 'Stangle("fmcsR.Rnw")' | R --slave; pdflatex fmcsR.tex;  bibtex fmcsR; pdflatex fmcsR.tex
+% NOTE -- ONLY EDIT THE .Rnw FILE!!!  The .tex file is
+% likely to be overwritten.
+%
+% \VignetteIndexEntry{gpls Tutorial}
+% \VignetteDepends{}
+% \VignetteKeywords{}
+% \VignettePackage{gpls}
+\documentclass[11pt, letterpaper]{article}
+% Enlage printing area
+\usepackage{a4wide}
+	
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage[authoryear,round]{natbib}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{float}
+
+\newcommand{\comment}[1]{}
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+\newcommand{\Rmethod}[1]{{\texttt{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+	
+% Define header and footer area with fandyhdr package (see: http://www.ctan.org/tex-archive/macros/latex/contrib/fancyhdr/fancyhdr.pdf)
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\rhead{\nouppercase{\leftmark}}
+\lhead{\textit{fmcsR Manual}}
+\rfoot{\thepage}
+
+<<echo=FALSE>>=
+options(width=80)
+@
+%\parindent 0in
+
+\bibliographystyle{plainnat}
+
+\begin{document}
+\title{fmcsR: a Flexible Maximum Common Substructure Algorithm for Advanced Compound Similarity Searching}
+\author{Yan Wang, Tyler Backman, Thomas Girke}
+\maketitle
+
+\section{Introduction}
+\markboth{Introduction}{} % Only required to print section title in header field without numbering. 
+
+Maximum common substructure (MCS) algorithms rank among the most sensitive and accurate methods for measuring structural similarities among small molecules. This utility is critical for many research areas in drug discovery and chemical genomics. The MCS problem is a graph-based similarity concept that is defined as the largest substructure (sub-graph) shared among two compounds \citep{Cao2008a}. It fundamentally differs from the structural descriptor-based strategies like fingerprints or structural keys. Another strength of the MCS approach is the identification of the actual MCS that can be mapped back to the source compounds in order to pinpoint the common and unique features in their structures. This output is often more intuitive to interpret and chemically more meaningful than the purely numeric information returned by descriptor-based approaches. Because the MCS problem is NP-complete, an efficient algorithm is essential to minimize the compute time of its extremely complex search process. The \Rpackage{fmcsR} package implements an efficient backtracking algorithm that introduces a new flexible MCS (FMCS) matching strategy to identify MCSs among compounds containing atom and/or bond mismatches. In contrast to this, other MCS algorithms find only exact MCSs that are perfectly contained in two molecules. The package provides several utilities to use the FMCS algorithm for pairwise compound comparisons, structure similarity searching and clustering. To maximize performance, the time consuming computational steps of \Rpackage{fmcsR} are implemented in C++. Integration with the \Rpackage{ChemmineR} package provides visualization functionalities of MCSs and consistent structure and substructure data handling routines \citep{Cao2008c, Backman2011a}. The following gives an overview of the most important functionalities provided by \Rpackage{fmcsR}. \\
+
+
+\section{Installation}
+\markboth{Installation}{} % Only required to print section title in header field without numbering. 
+The R software for running \Rpackage{fmcsR} and \Rpackage{ChemmineR} can be downloaded from CRAN (\url{http://cran.at.r-project.org/}). The \Rpackage{fmcsR} package can be installed from an open R session using the \Rfunction{biocLite} install command. 
+<<eval=FALSE>>=
+source("http://bioconductor.org/biocLite.R")
+biocLite("fmcsR")
+@
+
+\section{Quick Overview}
+\markboth{Quick Overview}{} % Only required to print section title in header field without numbering. 
+\noindent To demo the main functionality of the \Rpackage{fmcsR} package, one can load its sample data stored as \Rclass{SDFset} object. The generic \Rfunction{plot} function can be used to visualize the corresponding structures. 
+<<quicktest1, eval=TRUE, fig=TRUE, include=FALSE, keep.source=TRUE>>=
+library(fmcsR)
+data(fmcstest)
+plot(fmcstest[1:3], print=FALSE)
+@
+\begin{figure}[H]
+  \centering
+   \includegraphics[height=60mm]{fmcsR-quicktest1.pdf}
+   \caption{Structures depictions of sample data.}
+   \label{fig:quicktest1}
+\end{figure}
+
+\noindent The \Rfunction{fmcs} function computes the MCS/FMCS shared among two compounds, which can be highlighted in their structure with the \Rfunction{plotMCS} function. 
+<<quicktest2, eval=TRUE, fig=TRUE, include=FALSE, keep.source=TRUE>>=
+test <- fmcs(fmcstest[1], fmcstest[2], au=2, bu=1)
+plotMCS(test)
+@
+\begin{figure}[H]
+  \centering
+   \includegraphics[height=60mm]{fmcsR-quicktest2.pdf}
+   \caption{The red bonds highlight the MCS shared among the two compounds.}
+   \label{fig:quicktest2}
+\end{figure}
+
+\section{Documentation}
+\markboth{Documentation}{} % Only required to print section title in header field without numbering. 
+
+<<eval=TRUE, keep.source=TRUE>>=
+library("fmcsR") # Loads the package
+@
+<<eval=FALSE, keep.source=TRUE>>=
+library(help="fmcsR") # Lists functions/classes provided by fmcsR 
+library(help="ChemmineR") # Lists functions/classes from ChemmineR
+vignette("fmcsR") # Opens this PDF manual
+vignette("ChemmineR") # Opens ChemmineR PDF manual
+@
+
+\noindent The help documents for the different functions and container classes can be accessed with the standard R help syntax.
+<<eval=FALSE, keep.source=TRUE>>=
+?fmcs
+?"MCS-class"
+?"SDFset-class"
+@
+
+\section{MCS of Two Compounds}
+\markboth{MCS of Two Compounds}{} % Only required to print section title in header field without numbering. 
+
+\subsection{Data Import}
+\noindent The following loads the sample data set provided by the \Rpackage{fmcsR} package. It contains the SD file (SDF) of \Sexpr{length(fmcstest)} molecules stored in an \Rclass{SDFset} object. 
+<<eval=TRUE, keep.source=TRUE>>=
+data(fmcstest)
+sdfset <- fmcstest
+sdfset
+@
+
+\noindent Custom compound data sets can be imported and exported with the \Rfunction{read.SDFset} and \Rfunction{write.SDF} functions, respectively. The following demonstrates this by exporting the \Rclass{sdfset} object to a file named sdfset.sdf. The latter is then reimported into R with the \Rfunction{read.SDFset} function. 
+<<eval=FALSE, keep.source=TRUE>>=
+write.SDF(sdfset, file="sdfset.sdf")
+mysdf <- read.SDFset(file="sdfset.sdf")
+@
+
+\subsection{Compute MCS}
+\noindent The \Rfunction{fmcs} function accepts as input two molecules provided as \Rclass{SDF} or \Rclass{SDFset} objects. Its output is an S4 object of class \Rclass{MCS}. The default printing behavior summarizes the MCS result by providing the number of MCSs it found, the total number of atoms in the query compound $a$, the total number of atoms in the target compound $b$, the number of atoms in their MCS $c$ and the corresponding \textit{Tanimoto Coefficient}. The latter is a widely used similarity measure that is defined here as $c/(a+b-c)$. In addition, the \textit{Overlap Coefficient} is provided, which is defined as $c/min(a,b)$. This coefficient is often useful for detecting similarities among compounds with large size differences. 
+<<eval=TRUE, keep.source=TRUE>>=
+mcsa <- fmcs(sdfset[[1]], sdfset[[2]])
+mcsa
+mcsb <- fmcs(sdfset[[1]], sdfset[[3]])
+mcsb
+@
+
+\noindent If \Rfunction{fmcs} is run with \Rfunarg{fast=TRUE} then it returns the numeric summary information in a named \Rclass{vector}.
+<<eval=TRUE, keep.source=TRUE>>=
+fmcs(sdfset[1], sdfset[2], fast=TRUE)
+@
+
+\subsection{\Rclass{MCS} Class Usage}
+\noindent The \Rclass{MCS} class contains three components named \Rclass{stats}, \Rclass{mcs1} and \Rclass{mcs2}. The \Rclass{stats} slot stores the numeric summary information, while the structural MCS information for the query and target structures is stored in the \Rclass{mcs1} and \Rclass{mcs2} slots, respectively. The latter two slots each contain a \Rclass{list} with two subcomponents: the original query/target structures as \Rclass{SDFset} objects as well as one or more numeric index vector(s) specifying the MCS information in form of the row positions in the atom block of the corresponding \Rclass{SDFset}. A call to \Rfunction{fmcs} will often return several index vectors. In those cases the algorithm has identified alternative MCSs of equal size.
+<<eval=TRUE, keep.source=TRUE>>=
+slotNames(mcsa)
+@
+
+\noindent Accessor methods are provided to return the different data components of the \Rclass{MCS} class. 
+<<eval=TRUE, keep.source=TRUE>>=
+stats(mcsa) # or mcsa[["stats"]]
+mcsa1 <- mcs1(mcsa) # or mcsa[["mcs1"]]
+mcsa2 <- mcs2(mcsa) # or mcsa[["mcs2"]]
+mcsa1[1] # returns SDFset component
+mcsa1[[2]][1:2] # return first two index vectors
+@
+
+\noindent The \Rfunction{mcs2sdfset} function can be used to return the substructures stored in an \Rclass{MCS} instance as \Rclass{SDFset} object. If \Rfunarg{type="new"} new atom numbers will be assigned to the subsetted SDF, while \Rfunarg{type="old"} will maintain the atom numbers from its source. For details consult the help documents \Rclass{?mcs2sdfset} and \Rclass{?atomsubset}. 
+<<eval=TRUE, fig=TRUE, keep.source=TRUE>>=
+mcstosdfset <- mcs2sdfset(mcsa, type="new")
+plot(mcstosdfset[[1]], print=FALSE)
+@
+
+\noindent To construct an \Rclass{MCS} object manually, one can provide the required data components in a \Rclass{list}.
+<<eval=TRUE, keep.source=TRUE>>=
+mylist <- list(stats=stats(mcsa), mcs1=mcs1(mcsa), mcs2=mcs2(mcsa)) 
+as(mylist, "MCS")
+@
+
+\section{FMCS of Two Compounds}
+\noindent If \Rfunction{fmcs} is run with its default paramenters then it returns the MCS of two compounds, because the mismatch parameters are all set to zero. To identify FMCSs, one has to raise the number of upper bound atom mismates \Rfunarg{au} and/or bond mismatches \Rfunarg{bu} to interger values above zero. 
+
+<<au0bu0, eval=TRUE, fig=TRUE, include=FALSE, keep.source=TRUE>>=
+plotMCS(fmcs(sdfset[1], sdfset[2], au=0, bu=0))
+@
+\begin{figure}[H]
+  \centering
+   \includegraphics[height=60mm]{fmcsR-au0bu0.pdf}
+   \caption{MCS for \Rclass{sdfset[1]} and \Rclass{sdfset[2]} with \Rfunarg{au=0} and \Rfunarg{bu=0}}
+   \label{fig:au0bu0}
+\end{figure}
+
+<<au1bu1, eval=TRUE, fig=TRUE, include=FALSE, keep.source=TRUE>>=
+plotMCS(fmcs(sdfset[1], sdfset[2], au=1, bu=1))
+@
+\begin{figure}[H]
+  \centering
+   \includegraphics[height=60mm]{fmcsR-au1bu1.pdf}
+   \caption{FMCS for \Rclass{sdfset[1]} and \Rclass{sdfset[2]} with \Rfunarg{au=1} and \Rfunarg{bu=1}}
+   \label{fig:au1bu1}
+\end{figure}
+
+<<au2bu2, eval=TRUE, fig=TRUE, include=FALSE, keep.source=TRUE>>=
+plotMCS(fmcs(sdfset[1], sdfset[2], au=2, bu=2))
+@
+\begin{figure}[H]
+  \centering
+   \includegraphics[height=60mm]{fmcsR-au2bu2.pdf}
+   \caption{FMCS for \Rclass{sdfset[1]} and \Rclass{sdfset[2]} with \Rfunarg{au=2} and \Rfunarg{bu=2}}
+   \label{fig:au2bu2}
+\end{figure}
+
+<<au0bu013, eval=TRUE, fig=TRUE, include=FALSE, keep.source=TRUE>>=
+plotMCS(fmcs(sdfset[1], sdfset[3], au=0, bu=0))
+@
+\begin{figure}[H]
+  \centering
+   \includegraphics[height=60mm]{fmcsR-au0bu013.pdf}
+   \caption{MCS for \Rclass{sdfset[1]} and \Rclass{sdfset[3]} with \Rfunarg{au=0} and \Rfunarg{bu=0}}
+   \label{fig:au2bu213}
+\end{figure}
+
+\section{FMCS Search Functionality}
+\noindent The \Rfunction{fmcsBatch} function provides FMCS search functionality for compound collections stored in \Rclass{SDFset} objects.
+<<eval=TRUE, keep.source=TRUE>>=
+fmcsBatch(sdfset[1], sdfset[1:3], au=0, bu=0)
+@
+
+\section{Clustering with FMCS}
+\noindent The \Rfunction{fmcsBatch} function can be used to compute a similarity matrix for clustering with various algorithms available in R. The following example uses the FMCS algorithm to compute a similarity matrix that is used for hierarchical clustering with the \Rfunction{hclust} function and the result is plotted in form of a dendrogram. 
+<<tree, eval=TRUE, fig=TRUE, include=FALSE, keep.source=TRUE>>=
+data(sdfsample) # Loads larger sample data set
+sdf <- sdfsample[1:7]
+d <- sapply(cid(sdf), function(x) 
+            fmcsBatch(sdf[x], sdf, au=0, bu=0, 
+            matching.mode="aromatic")[,"Overlap_Coefficient"])
+d
+hc <- hclust(as.dist(1-d), method="complete")
+plot(as.dendrogram(hc), edgePar=list(col=4, lwd=2), horiz=TRUE) 
+@
+\begin{figure}[H]
+  \centering
+   \includegraphics[width=80mm]{fmcsR-tree.pdf}
+   \caption{Hierarchical clustering result.}
+   \label{fig:tree}
+\end{figure}
+
+\noindent The FMCS shared among compound pairs of interest can be visualized with \Rfunction{plotMCS}, here for the two most similar compounds from the previous tree:
+<<au0bu024, eval=TRUE, fig=TRUE, include=FALSE, keep.source=TRUE>>=
+plotMCS(fmcs(sdf[3], sdf[7], au=0, bu=0, matching.mode="aromatic"))
+@
+\begin{figure}[H]
+  \centering
+   \includegraphics[height=60mm]{fmcsR-au0bu024.pdf}
+   \caption{Most similar compounds from previous tree.}
+   \label{fig:au2bu224}
+\end{figure}
+
+\section{Version Information}
+\markboth{Version Information}{} % Only required to print section title in header field without numbering. 
+<<sessionInfo, eval=TRUE, keep.source=TRUE>>=
+sessionInfo()
+@
+
+\section*{} % Dummy section to fix "References" link in the table-of-contents list
+\bibliography{bibtex}
+\addcontentsline{toc}{section}{References} % Includes the entry "References" in the table-of-contents list 
+\end{document}
