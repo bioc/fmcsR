@@ -1,6 +1,9 @@
 **************************************************
 *               NEWS ABOUT fmcsR                 *
 **************************************************
+version 1.1.1
+	- Vignette updates
+
 version 0.99.0
 	- fmcsR submitted to Bioconductor
 
