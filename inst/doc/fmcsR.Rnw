@@ -298,7 +298,7 @@ To introduce the graph concepts used by the following parts in this outline, we 
 \begin{figure}[bthp]
   \centering
     %{\def\epsfsize#1#2{0.5#1}\FIG{iso}}
-    \includegraphics[width=10cm]{iso.pdf}
+    \includegraphics[width=10cm]{images/iso.pdf}
   \caption{Illustration of isomorphism on three sample graphs.}
   \label{FIG:ISO}
 \end{figure}
@@ -308,7 +308,7 @@ To introduce the graph concepts used by the following parts in this outline, we 
 \begin{figure}[bthp]
   \centering
     %{\def\epsfsize#1#2{0.5#1}\FIG{sub}}
-    \includegraphics[width=8cm]{sub.pdf}
+    \includegraphics[width=8cm]{images/sub.pdf}
   \caption{Three sample structures to illustrate induced substructures.}
   \label{FIG:sub}
 \end{figure}
@@ -323,7 +323,7 @@ To introduce our algorithm, the following illustrates its major steps for two si
 \begin{figure}[bthp]
   \centering
     %{\def\epsfsize#1#2{0.5#1}\FIG{emp}}
-    \includegraphics[width=10cm]{emp.pdf}
+    \includegraphics[width=10cm]{images/emp.pdf}
   \caption{Two different structures.}
   \label{FIG:EMP}
 \end{figure}
@@ -331,7 +331,7 @@ To introduce our algorithm, the following illustrates its major steps for two si
 \begin{figure}[bthp]
   \centering
     %{\def\epsfsize#1#2{0.5#1}\FIG{tree}}
-    \includegraphics[width=14cm]{tree.pdf}
+    \includegraphics[width=14cm]{images/tree.pdf}
   \caption{Sample search tree to identify the MCS shared among compound (1) and (2) in Figure \ref{FIG:EMP}.}
   \label{FIG:TREE}
 \end{figure}
@@ -454,7 +454,7 @@ To avoid an exhaustive search of the entire search tree, a branch and bound stra
 \begin{figure}[bthp]
   \centering
     %{\def\epsfsize#1#2{0.8#1}\FIG{bb}}
-    \includegraphics[width=8cm]{bb.pdf}
+    \includegraphics[width=8cm]{images/bb.pdf}
   \caption{Method to calculate upper bond of potential matching.}
   \label{FIG:bb}
 \end{figure}
