@@ -289,7 +289,7 @@ sessionInfo()
 \markboth{Supplementary Materials: Outline of FMCS Algorithm}{} % Only required to print section title in header field without numbering. 
 \label{supplement:algorithm}
 
-Please consult \Rpackage{fmcsR} vignette of Bioconductor Release 2.12 or higher.
+Please consult \href{http://www.bioconductor.org/packages/devel/bioc/vignettes/fmcsR/inst/doc/fmcsR.pdf}{{\textcolor{blue}{\Rpackage{fmcsR} vignette of Bioconductor Release 2.12 or higher}}}.
 
 \pagebreak
 \section*{} % Dummy section to fix "References" link in the table-of-contents list
