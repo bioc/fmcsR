@@ -1,7 +1,7 @@
 Package: fmcsR
 Type: Package
 Title: Flexible Maximum Common Substructure (FMCS) Searching
-Version: 1.2.0
+Version: 1.3.0
 Date: 2013-03-16
 Author: Yan Wang, Tyler Backman, Kevin Horan, Thomas Girke
 Maintainer: ChemmineR Team <see@url>
