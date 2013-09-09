@@ -8,49 +8,31 @@
 % \VignetteDepends{}
 % \VignetteKeywords{}
 % \VignettePackage{gpls}
-\documentclass[11pt, letterpaper]{article}
-% Enlage printing area
-\usepackage{a4wide}
-	
-\usepackage{algorithmic}
-\usepackage{algorithm}
-\usepackage{graphicx}
-\usepackage{color}
-\usepackage[authoryear,round]{natbib}
+\documentclass{article}
+<<style, echo=FALSE, results=tex>>=
+BiocStyle::latex()
+@
 \usepackage{hyperref}
 \usepackage{url}
-\usepackage{float}
+\usepackage[authoryear,round]{natbib}
+\usepackage{graphicx}
+\bibliographystyle{plainnat}
+\def\bibsection{\section{References}}
 
-\newcommand{\comment}[1]{}
-\newcommand{\Rfunction}[1]{{\texttt{#1}}}
-\newcommand{\Robject}[1]{{\texttt{#1}}}
-\newcommand{\Rpackage}[1]{{\textit{#1}}}
-\newcommand{\Rmethod}[1]{{\texttt{#1}}}
-\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
-\newcommand{\Rclass}[1]{{\textit{#1}}}
 	
-\makeatletter
-\newcounter{algorithmbis}
-\setcounter{algorithmbis}{0}
-\renewcommand{\thealgorithmbis}{\thesection.\arabic{algorithmbis}}
-\def\algorithmbis{\@ifnextchar[{\@algorithmbisa}{\@algorithmbisb}}
-\def\@algorithmbisa[#1]{%
-  \refstepcounter{algorithmbis}
-  \trivlist
-  \leftmargin\z@
-  \itemindent\z@
-  \labelsep\z@
-  \item[\parbox{\textwidth}{%
-    \hrule
-    \hrule
-    \noindent\strut\textbf{Algorithm \thealgorithmbis} #1
-    \hrule
-  }]\hfil\vskip0em%
-}
-\def\@algorithmbisb{\@algorithmbisa[]}
-\def\endalgorithmbis{\hfil\vskip-1em\hrule\endtrivlist}
-\makeatother
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{url}
 
+%\newcommand{\comment}[1]{}
+%\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+%\newcommand{\Robject}[1]{{\texttt{#1}}}
+%\newcommand{\Rpackage}[1]{{\textit{#1}}}
+%\newcommand{\Rmethod}[1]{{\texttt{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+%\newcommand{\Rclass}[1]{{\textit{#1}}}
+	
 % Define header and footer area with fandyhdr package (see: http://www.ctan.org/tex-archive/macros/latex/contrib/fancyhdr/fancyhdr.pdf)
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -61,7 +43,8 @@
 \rfoot{\thepage}
 
 <<echo=FALSE>>=
-options(width=80)
+options(width=95)
+unlink("test.db")
 @
 %\parindent 0in
 
@@ -71,31 +54,27 @@ options(width=80)
 \title{fmcsR: a Flexible Maximum Common Substructure Algorithm for Advanced Compound Similarity Searching}
 \author{Yan Wang, Tyler Backman, Kevin Horan, Thomas Girke}
 \maketitle
+\tableofcontents
 
 \section{Introduction}
-\markboth{Introduction}{} % Only required to print section title in header field without numbering. 
 
 Maximum common substructure (MCS) algorithms rank among the most sensitive and accurate methods for measuring structural similarities among small molecules. This utility is critical for many research areas in drug discovery and chemical genomics. The MCS problem is a graph-based similarity concept that is defined as the largest substructure (sub-graph) shared among two compounds \citep{Cao2008a, Wang2013a}. It fundamentally differs from the structural descriptor-based strategies like fingerprints or structural keys. Another strength of the MCS approach is the identification of the actual MCS that can be mapped back to the source compounds in order to pinpoint the common and unique features in their structures. This output is often more intuitive to interpret and chemically more meaningful than the purely numeric information returned by descriptor-based approaches. Because the MCS problem is NP-complete, an efficient algorithm is essential to minimize the compute time of its extremely complex search process. The \Rpackage{fmcsR} package implements an efficient backtracking algorithm that introduces a new flexible MCS (FMCS) matching strategy to identify MCSs among compounds containing atom and/or bond mismatches. In contrast to this, other MCS algorithms find only exact MCSs that are perfectly contained in two molecules. The details about the FMCS algorithm are described in the Supplementary Materials Section of the associated publication \citep{Wang2013a}. The package provides several utilities to use the FMCS algorithm for pairwise compound comparisons, structure similarity searching and clustering. To maximize performance, the time consuming computational steps of \Rpackage{fmcsR} are implemented in C++. Integration with the \Rpackage{ChemmineR} package provides visualization functionalities of MCSs and consistent structure and substructure data handling routines \citep{Cao2008c, Backman2011a}. The following gives an overview of the most important functionalities provided by \Rpackage{fmcsR}. \\
 
-\pagebreak
 \section{Installation}
-\markboth{Installation}{} % Only required to print section title in header field without numbering. 
 The R software for running \Rpackage{fmcsR} and \Rpackage{ChemmineR} can be downloaded from CRAN (\url{http://cran.at.r-project.org/}). The \Rpackage{fmcsR} package can be installed from an open R session using the \Rfunction{biocLite} install command. 
 <<eval=FALSE>>=
 source("http://bioconductor.org/biocLite.R")
 biocLite("fmcsR")
 @
 
-\pagebreak
 \section{Quick Overview}
-\markboth{Quick Overview}{} % Only required to print section title in header field without numbering. 
 \noindent To demo the main functionality of the \Rpackage{fmcsR} package, one can load its sample data stored as \Rclass{SDFset} object. The generic \Rfunction{plot} function can be used to visualize the corresponding structures. 
 <<quicktest1, eval=TRUE, fig=TRUE, include=FALSE, keep.source=TRUE>>=
 library(fmcsR)
 data(fmcstest)
 plot(fmcstest[1:3], print=FALSE)
 @
-\begin{figure}[H]
+\begin{figure}[bthp]
   \centering
    \includegraphics[height=60mm]{fmcsR-quicktest1.pdf}
    \caption{Structures depictions of sample data.}
@@ -107,7 +86,7 @@ plot(fmcstest[1:3], print=FALSE)
 test <- fmcs(fmcstest[1], fmcstest[2], au=2, bu=1)
 plotMCS(test)
 @
-\begin{figure}[H]
+\begin{figure}[bthp]
   \centering
    \includegraphics[height=60mm]{fmcsR-quicktest2.pdf}
    \caption{The red bonds highlight the MCS shared among the two compounds.}
@@ -116,7 +95,6 @@ plotMCS(test)
 
 \pagebreak
 \section{Documentation}
-\markboth{Documentation}{} % Only required to print section title in header field without numbering. 
 
 <<eval=TRUE, keep.source=TRUE>>=
 library("fmcsR") # Loads the package
@@ -135,9 +113,7 @@ vignette("ChemmineR") # Opens ChemmineR PDF manual
 ?"SDFset-class"
 @
 
-\pagebreak
 \section{MCS of Two Compounds}
-\markboth{MCS of Two Compounds}{} % Only required to print section title in header field without numbering. 
 
 \subsection{Data Import}
 \noindent The following loads the sample data set provided by the \Rpackage{fmcsR} package. It contains the SD file (SDF) of \Sexpr{length(fmcstest)} molecules stored in an \Rclass{SDFset} object. 
@@ -194,14 +170,13 @@ mylist <- list(stats=stats(mcsa), mcs1=mcs1(mcsa), mcs2=mcs2(mcsa))
 as(mylist, "MCS")
 @
 
-\pagebreak
 \section{FMCS of Two Compounds}
 \noindent If \Rfunction{fmcs} is run with its default paramenters then it returns the MCS of two compounds, because the mismatch parameters are all set to zero. To identify FMCSs, one has to raise the number of upper bound atom mismates \Rfunarg{au} and/or bond mismatches \Rfunarg{bu} to interger values above zero. 
 
 <<au0bu0, eval=TRUE, fig=TRUE, include=FALSE, keep.source=TRUE>>=
 plotMCS(fmcs(sdfset[1], sdfset[2], au=0, bu=0))
 @
-\begin{figure}[H]
+\begin{figure}[bthp]
   \centering
    \includegraphics[height=60mm]{fmcsR-au0bu0.pdf}
    \caption{MCS for \Rclass{sdfset[1]} and \Rclass{sdfset[2]} with \Rfunarg{au=0} and \Rfunarg{bu=0}}
@@ -211,7 +186,7 @@ plotMCS(fmcs(sdfset[1], sdfset[2], au=0, bu=0))
 <<au1bu1, eval=TRUE, fig=TRUE, include=FALSE, keep.source=TRUE>>=
 plotMCS(fmcs(sdfset[1], sdfset[2], au=1, bu=1))
 @
-\begin{figure}[H]
+\begin{figure}[bthp]
   \centering
    \includegraphics[height=60mm]{fmcsR-au1bu1.pdf}
    \caption{FMCS for \Rclass{sdfset[1]} and \Rclass{sdfset[2]} with \Rfunarg{au=1} and \Rfunarg{bu=1}}
@@ -221,17 +196,18 @@ plotMCS(fmcs(sdfset[1], sdfset[2], au=1, bu=1))
 <<au2bu2, eval=TRUE, fig=TRUE, include=FALSE, keep.source=TRUE>>=
 plotMCS(fmcs(sdfset[1], sdfset[2], au=2, bu=2))
 @
-\begin{figure}[H]
+\begin{figure}[bthp]
   \centering
    \includegraphics[height=60mm]{fmcsR-au2bu2.pdf}
    \caption{FMCS for \Rclass{sdfset[1]} and \Rclass{sdfset[2]} with \Rfunarg{au=2} and \Rfunarg{bu=2}}
    \label{fig:au2bu2}
 \end{figure}
 
+\pagebreak
 <<au0bu013, eval=TRUE, fig=TRUE, include=FALSE, keep.source=TRUE>>=
 plotMCS(fmcs(sdfset[1], sdfset[3], au=0, bu=0))
 @
-\begin{figure}[H]
+\begin{figure}[bthp]
   \centering
    \includegraphics[height=60mm]{fmcsR-au0bu013.pdf}
    \caption{MCS for \Rclass{sdfset[1]} and \Rclass{sdfset[3]} with \Rfunarg{au=0} and \Rfunarg{bu=0}}
@@ -247,7 +223,6 @@ sdf <- sdfsample
 fmcsBatch(sdf[1], sdf[1:30], au=0, bu=0)
 @
 
-\pagebreak
 \section{Clustering with FMCS}
 \noindent The \Rfunction{fmcsBatch} function can be used to compute a similarity matrix for clustering with various algorithms available in R. The following example uses the FMCS algorithm to compute a similarity matrix that is used for hierarchical clustering with the \Rfunction{hclust} function and the result is plotted in form of a dendrogram. 
 <<tree, eval=TRUE, fig=TRUE, include=FALSE, keep.source=TRUE>>=
@@ -259,7 +234,7 @@ d
 hc <- hclust(as.dist(1-d), method="complete")
 plot(as.dendrogram(hc), edgePar=list(col=4, lwd=2), horiz=TRUE) 
 @
-\begin{figure}[H]
+\begin{figure}[bthp]
   \centering
    \includegraphics[width=80mm]{fmcsR-tree.pdf}
    \caption{Hierarchical clustering result.}
@@ -270,21 +245,18 @@ plot(as.dendrogram(hc), edgePar=list(col=4, lwd=2), horiz=TRUE)
 <<au0bu024, eval=TRUE, fig=TRUE, include=FALSE, keep.source=TRUE>>=
 plotMCS(fmcs(sdf[3], sdf[7], au=0, bu=0, matching.mode="aromatic"))
 @
-\begin{figure}[H]
+\begin{figure}[bthp]
   \centering
    \includegraphics[height=60mm]{fmcsR-au0bu024.pdf}
    \caption{Most similar compounds from previous tree.}
    \label{fig:au2bu224}
 \end{figure}
 
-\pagebreak
 \section{Version Information}
-\markboth{Version Information}{} % Only required to print section title in header field without numbering. 
 <<sessionInfo, eval=TRUE, keep.source=TRUE>>=
 sessionInfo()
 @
 
-% \pagebreak
 % \section{Supplementary Materials: Outline of FMCS Algorithm}
 % \markboth{Supplementary Materials: Outline of FMCS Algorithm}{} % Only required to print section title in header field without numbering. 
 % \label{supplement:algorithm}
@@ -510,9 +482,6 @@ sessionInfo()
 % 
 % Often it is not desired to compute MCSs that violate basic rules of organic chemistry. Those include mappings of non-aromatic bonds with aromatic ones or aliphatic with ring components. To avoid this, our FMCS can be run in a mode that is aware of these basic chemical principles by treating aromatic and ring bonds differently to compute chemically more reasonable MCSs. This is achieved by detecting in a preprocessing step all ring as well as aromatic bonds to differentiate them from aliphatic bonds. In the ring and aromaticity aware modes the number of mappings the main algorithm has to perform is usually reduced resulting in a shorter compute time when this mode is turned on.  
 
-\pagebreak
-\section*{} % Dummy section to fix "References" link in the table-of-contents list
 \bibliography{bibtex}
-\addcontentsline{toc}{section}{References} % Includes the entry "References" in the table-of-contents list 
 
 \end{document}
