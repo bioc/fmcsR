@@ -251,8 +251,8 @@ plotMCS(fmcs(sdf[3], sdf[7], au=0, bu=0, matching.mode="aromatic"))
 \end{figure}
 
 \section{Version Information}
-<<sessionInfo, eval=TRUE, keep.source=TRUE>>=
-sessionInfo()
+<<sessionInfo, results=tex, print=TRUE>>=
+toLatex(sessionInfo())
 @
 
 % \section{Supplementary Materials: Outline of FMCS Algorithm}
