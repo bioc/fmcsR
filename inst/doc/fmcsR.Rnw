@@ -49,7 +49,7 @@ unlink("test.db")
 %\parindent 0in
 
 \begin{document}
-\title{fmcsR: a Flexible Maximum Common Substructure Algorithm for Advanced Compound Similarity Searching}
+\title{fmcsR: Mismatch Tolerant Maximum Common Substructure Searching}
 \author{Yan Wang, Tyler Backman, Kevin Horan, Thomas Girke}
 \maketitle
 \tableofcontents
