@@ -48,8 +48,6 @@ unlink("test.db")
 @
 %\parindent 0in
 
-\bibliographystyle{plainnat}
-
 \begin{document}
 \title{fmcsR: a Flexible Maximum Common Substructure Algorithm for Advanced Compound Similarity Searching}
 \author{Yan Wang, Tyler Backman, Kevin Horan, Thomas Girke}
