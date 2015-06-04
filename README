@@ -1,5 +1,8 @@
 changelog
 
+version 1.10.1 - 1.10.2
+    - biocViews updates
+
 version 1.10.1
 	- fixed vignette problems from knitrBootstrap conversion
 
