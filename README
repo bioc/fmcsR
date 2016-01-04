@@ -1,7 +1,8 @@
 changelog
 
-version 1.12.1
+version 1.12.1 - 1.12.2
     - ported vignette to R Markdown
+    - Vignette updates
 
 version 1.3.6 - 1.11.4
     - Vignette updates
