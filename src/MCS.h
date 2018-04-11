@@ -120,45 +120,50 @@ namespace FMCS {
         
     private:
         
-        bool haveBeenSwapped;
-        
-        int _timeout;
-        
-        bool _isTimeout;
-        
+        const MCSCompound& compoundOne;
+        const MCSCompound& compoundTwo;
+
+        size_t userDefinedLowerBound;
+        size_t substructureNumLimit;
+
+        size_t atomMismatchLowerBound;
+        size_t atomMismatchUpperBound;
+
+        size_t bondMismatchLowerBound;
+        size_t bondMismatchUpperBound;
+
+        MatchType matchType;
+
         RunningMode runningMode;
-        
-        bool identicalGraph;
-        
-        size_t bestSize;
-        
-        
+
+        int _timeout;
+
+        size_t atomMismatchCurr;
+        size_t bondMismatchCurr;
+
+        size_t currSubstructureNum;
+
         double timeUsed;
 		  clock_t startTime;
+        size_t bestSize;
+        bool identicalGraph;
+        bool _isTimeout;
+        bool haveBeenSwapped;
+
+
+        
 
         std::list<MCSMap> bestList;
 
         MCSMap currentMapping;
 
-        MatchType matchType;
 
-        size_t userDefinedLowerBound;
-        size_t substructureNumLimit;
-        size_t currSubstructureNum;
         
-        size_t atomMismatchUpperBound;
-        size_t bondMismatchUpperBound;
         
-        size_t atomMismatchLowerBound;
-        size_t bondMismatchLowerBound;
         
-        size_t atomMismatchCurr;
-        size_t bondMismatchCurr;
         
         bool strictRingMatch;
         
-        const MCSCompound& compoundOne;
-        const MCSCompound& compoundTwo;
 
         std::map<int, std::map<int, bool> > rules;
 #ifdef HAVE_LIBOPENBABEL

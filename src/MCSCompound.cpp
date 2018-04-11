@@ -80,7 +80,7 @@ namespace FMCS {
 #else
 
     MCSCompound::MCSCompound(const MCSCompound& other)
-            : bondCount(0), atomCount(0), atoms(NULL), bonds(NULL), SdfContentString(other.SdfContentString) {
+            :  SdfContentString(other.SdfContentString), bondCount(0), atomCount(0), atoms(NULL), bonds(NULL) {
 
             if (other.atoms != NULL) {
                 atoms = new Atom[other.atomCount];

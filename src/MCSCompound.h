@@ -44,7 +44,7 @@ namespace FMCS {
                 : atomId(id), atomType(type) {}
 #else
             Atom(size_t id, size_t originalId, int atomType, std::string atomSymbol) 
-                : atomId(id), originalId(originalId), atomType(atomType), atomSymbol(atomSymbol) {}
+                : atomType(atomType), atomSymbol(atomSymbol),atomId(id), originalId(originalId)   {}
 #endif
 
             size_t degree() const { return neighborAtoms.size(); }
