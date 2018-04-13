@@ -398,7 +398,7 @@ namespace FMCS {
     	newCountLineStringStream << newBondCount;
     	newCountLineStringStream << oldCountsLine.substr(6);
     	string newCountLine = newCountLineStringStream.str();
-    	delete newAtomIndex;
+    	delete[] newAtomIndex;
     	newAtomIndex = NULL;
 
     	string newSDFString = compoundNameLine + "\n"
