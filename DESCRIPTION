@@ -1,7 +1,7 @@
 Package: fmcsR
 Type: Package
 Title: Mismatch Tolerant Maximum Common Substructure Searching
-Version: 1.22.0
+Version: 1.23.0
 Date: 2018-4-13
 Author: Yan Wang, Tyler Backman, Kevin Horan, Thomas Girke
 Maintainer: Thomas Girke <thomas.girke@ucr.edu>
