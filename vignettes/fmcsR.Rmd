@@ -91,8 +91,9 @@ The R software for running `fmcsR` and `ChemmineR` can be downloaded from CRAN
 (<http://cran.at.r-project.org/>). The `fmcsR` package can be installed from an
 open R session using the `biocLite` install command. 
 ```{r eval=FALSE}
-source("http://bioconductor.org/biocLite.R") 
-biocLite("fmcsR") 
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install("fmcsR") 
 ```
 
 
