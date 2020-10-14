@@ -43,7 +43,6 @@ knitr::opts_chunk$set(
 ```{r setup, echo=FALSE, messages=FALSE, warnings=FALSE}
 suppressPackageStartupMessages({
     library(ChemmineR)
-    library(ChemmineOB)
     library(fmcsR)
 })
 ```
