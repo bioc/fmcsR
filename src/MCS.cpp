@@ -299,7 +299,7 @@ namespace FMCS {
         double diff = (double)(clock() - startTime) / CLOCKS_PER_SEC * 1000 ;
 		  //printf("%f  at boundary. timeout: %d\n",diff,_timeout);
 		  if(!timeoutStop && _timeout != 0 && diff >= _timeout){
-			  warning("FMCS did not complete, timeout of %dms exceeded\n",_timeout);
+			  Rf_warning("FMCS did not complete, timeout of %dms exceeded\n",_timeout);
 			  timeoutStop = true;
 		  }
 
